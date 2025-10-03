@@ -4,7 +4,7 @@
 
 ## What is skon?
 
-Skon is an interpreted programming language built from scratch in Java. Currently in early development as a learning project.
+Skon is an interpreted programming language built from scratch in Java. **Currently in early development as a learning project.**
 
 
 ## Current Status?
@@ -33,6 +33,25 @@ java skon.Skon
 # File mode
 skon examples/hello.skon
 ```
+
+## A bit of background information
+
+### The Scanner Class
+
+The core of the scanner is a *loop*. It looks at the first character of the source code, figures out what *lexeme* it belongs to, and consumes it and any following characters that are part of the lexeme. At the end of the lexeme, the scanner emits a *token*.
+
+> lexeme = the raw text
+> 
+> literal = parsed value
+> 
+> lexical grammar = the rules that determine how a particular language groups chararcters into lexemes
+
+#### REGEX
+
+We're using *regular expressions*, defining a regex for each kind of lexeme and using those to match characters.
+
+We use the same rules as C for identifiers. The regex matches: 
+```[a-zA-Z_][a-zA-Z_0-9]```
 
 
 ### Exit Values
