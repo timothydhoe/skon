@@ -1,5 +1,14 @@
 package skon;
 
+/*
+ * Skon.java - Main Entry Point & Execution Controller
+ * 
+ * Handles command-line interface, file/REPL execution modes, and error reporting.
+ * This is the top-level coordinator that manages the entire interpreter pipeline.
+ * 
+ * Pipeline position: Entry point → runs Scanner → (future: Parser → Interpreter)
+ */
+
 // Imports
 import java.io.BufferedReader;
 import java.io.IOException;
