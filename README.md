@@ -58,8 +58,10 @@ We use the same rules as C for identifiers. The regex matches:
 
 Following [UNIX "sysexit.h" conventions](https://manpages.ubuntu.com/manpages/noble/man3/sysexits.h.3head.html):
 
-- 64: Incorrect usage (wrong command-line arguments)
-= 65: Data format error (syntax/runtime errors in script)
+
+> 64: Incorrect usage (wrong command-line arguments)
+>
+> 65: Data format error (syntax/runtime errors in script)
 
 
 #### Acknowledgments
