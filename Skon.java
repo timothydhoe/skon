@@ -31,6 +31,8 @@ public class Skon {
         } else if (args.length == 1) {
             runFile(args[0]);
         } else {
+            System.out.println("=== Welcome to skon. ===");
+            System.out.println("Ctrl+D to exit.");
             runPrompt();
         }
     }
