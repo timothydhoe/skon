@@ -1,4 +1,4 @@
-package skon
+package skon;
 
 /*
  * Scanner.java - Lexical Analyzer
@@ -23,24 +23,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import skon.Skon;
+
 import static skon.TokenType.*;
 
 class Scanner {
-    private final String source;
-    private final List<Token> tokens = new ArrayList<>();
-    private int start = 0;      // Points to first char of lexeme
-    private int current = 0;    // Points to current char
-    private int line = 1;       // Track current line (error handling)
+    private final String source ;    // raw source code string
+    private final List<Token> tokens = new ArrayList<>();       // Collected tokens
+    private int start = 0;          // Points to first char of lexeme
+    private int current = 0;        // Points to current char
+    private int line = 1;           // Track current line (error handling)
 
     Scanner(String source) {
         this.source = source;
     }
 
+    // Main scanning loop - processes entire source code
     List<Token> scanTokens() {
         while (!isAtEnd()) {
-            // We're at the beginning of the next lexeme.
+            // Reset starting pointer for next lexeme
             start = current;
-            scanToken();
+            scanToken();    // Process one token
         }
 
         // append EOF token to mark end of input.
@@ -48,14 +51,88 @@ class Scanner {
         return tokens;
     }
 
-    // TODO: ScanToken() -> heart of the scanner!
-        // simple switch where FOR NOW every lexeme is only a single char.
+    private void scanToken() {
+        char c = advance();     // Consume next character
+        switch (c) {
+            // single-character tokens
+            case '(': addToken(LEFT_PAREN); break;
+            case ')': addToken(RIGHT_PAREN); break;
+            case '{': addToken(LEFT_BRACE); break;
+            case '}': addToken(RIGHT_BRACE); break;
+            case ',': addToken(COMMA); break;
+            case '.': addToken(DOT); break;
+            case '-': addToken(MINUS); break;
+            case '+': addToken(PLUS); break;
+            case ';': addToken(SEMICOLON); break;
+            case '*': addToken(STAR); break;
+            // Operators
+            case '!':
+                addToken(match('=') ? BANG_EQUAL : BANG); break;
+            case '=':
+                addToken(match('=') ? EQUAL_EQUAL : EQUAL); break;
+            case '<':
+                addToken(match('=') ? LESS_EQUAL : LESS); break;
+            case '>':
+                addToken(match('=') ? GREATER_EQUAL : GREATER); break;
+            // SLASH + multiple use cases
+            case '/':
+            if (match('/')) {
+                // A comment goes until the end of the line
+                while (peek() != '\n' && !isAtEnd()) advance();
+            }   else {
+                addToken(SLASH);
+            } break;
+            // Ignore whitespace
+            case ' ':
+            case '\r':
+            case '\t':
+                break;
+            // Go back to loop and increment line
+            case '\n':
+                line ++;
+                break;
 
-    private boolean isAtEnd() {
-        return current>= source.length()
+            default:
+                // Report unrecognised characters 
+                Skon.error(line, "Unexpected character.");
+                break;
+        }
     }
 
-    // TODO: scantoken() helper functions
-        // - consume next char and return it
-        // - output: grab text and create token
+    // Used for two-character operators like "!=", "==", ">="
+    private boolean match(char expected) {
+        if (isAtEnd()) return false;
+        if (source.charAt(current) != expected) return false;
+
+        current ++;
+        return true;
+    }
+
+    // lookahead: returns current char without consuming it
+    // does NOT move the current pointer forward
+    private char peek() {
+        if (isAtEnd()) return '\0'; // Returns null terminator '\0' if at end of source
+        return source.charAt(current);
+    }
+
+    // Check if all characters are consumed
+    private boolean isAtEnd() {
+        return current>= source.length();
+    }
+
+    // Consume and return current character, the move forward
+    private char advance() {
+        return source.charAt(current++); // Returns char at current, then increments
+    }
+
+    // Overload for tokens without a literal value (operators/keywords)
+    private void addToken(TokenType type) {
+        addToken(type, null);
+    }
+
+    // Create a token and add it to the token list.
+    private void addToken(TokenType type, Object literal) {
+        String text = source.substring(start, current);
+        tokens.add(new Token(type, text, literal, line));
+    }
 }
