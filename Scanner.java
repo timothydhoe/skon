@@ -92,11 +92,52 @@ class Scanner {
                 line ++;
                 break;
 
+            // Strings
+            case '""': string(); break;
+
             default:
+                if (isDigit(c)) {
+                    number();
+                } else {
                 // Report unrecognised characters 
                 Skon.error(line, "Unexpected character.");
+                }
                 break;
         }
+    }
+
+    // Used for numbers
+    private void number() {
+        while (isDigit(peek())) advance();
+
+        // look for fractional part
+        if (peek() == '.' && isDigit(PeekNext())) {
+            // consume the "."
+            advance();
+
+            while (isDigit(peek())) advance;
+        }
+
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    // Used for Strings
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') line++; // skon allows multi-line strings.
+            advance();
+        }
+
+        if (isAtEnd) {
+            Skon.error(line, "Unterminated string.");
+            return;
+        }
+
+        advance(); // The closing ".
+
+        // Trim surrouding quotes using .substring
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
     }
 
     // Used for two-character operators like "!=", "==", ">="
@@ -115,9 +156,21 @@ class Scanner {
         return source.charAt(current);
     }
 
+    // lookahead: Looks ahead at two characters.
+    // used for fractional numbers "." making sure there's a digit after it.
+    private char peekNext() {
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current + 1);
+    }
+
+    // Return for digit lexeme
+    private boolean isDigit(char c) {
+        return c >= '0' && c < '9';
+    }
+
     // Check if all characters are consumed
     private boolean isAtEnd() {
-        return current>= source.length();
+        return current >= source.length();
     }
 
     // Consume and return current character, the move forward
