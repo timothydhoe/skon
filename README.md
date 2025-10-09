@@ -53,6 +53,25 @@ We're using *regular expressions*, defining a regex for each kind of lexeme and 
 We use the same rules as C for identifiers. The regex matches: 
 ```[a-zA-Z_][a-zA-Z_0-9]```
 
+#### Strings
+
+skon supports multi-line strings. For now, it seems too complex to forbid them. This is a functionality that I might add later.
+
+At this time, skon also does not support escape sequences like ```\n```
+
+#### Number literals
+
+For now, all numbers are represented using Java's Double type.
+
+skon does not allow leading or trailing decimal points
+```
+.1234
+1234.
+```
+
+Negative numbers like ```-123``` is not a number literal, but an expression instead.
+
+*note: the digit lexemes are defined in the default case*
 
 ### Exit Values
 
