@@ -72,6 +72,7 @@ public class Skon {
         // TODO : Add interpreter/evaluator (execution)
 
         // TEMP: Print tokens for debugging
+        // to check if tokens are assigned the correct token 
         for (Token token : tokens) {
             System.out.println(token);
         }
