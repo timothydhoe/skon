@@ -98,6 +98,9 @@ class Scanner {
             default:
                 if (isDigit(c)) {
                     number();
+                // assumes a lexeme always starts with a letter or underscore
+                } else if (isAlpha(c)) {
+                    identifier();
                 } else {
                 // Report unrecognised characters 
                 Skon.error(line, "Unexpected character.");
@@ -106,16 +109,50 @@ class Scanner {
         }
     }
 
+    // Set of reserved words
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("and",     AND);
+        keywords.put("class",   CLASS);
+        keywords.put("else",    ELSE);
+        keywords.put("false",   FALSE);
+        keywords.put("for",     FOR);
+        keywords.put("fun",     FUN);
+        keywords.put("if",      IF);
+        keywords.put("null",    NULL);
+        keywords.put("or",      OR);
+        keywords.put("print",   PRINT);
+        keywords.put("return",  RETURN);
+        keywords.put("super",   SUPER);
+        keywords.put("skon",   SKON);
+        keywords.put("this",    THIS);
+        keywords.put("true",    TRUE);
+        keywords.put("var",     VAR);
+        keywords.put("while",   WHILE);
+    }
+
+    // Used for identifiers and keywords
+    private void identifier() {
+        while (isAlphaNumeric(peek())) advance();
+
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        if (type == null) type = IDENTIFIER;
+        addToken(type);
+    }
+
     // Used for numbers
     private void number() {
         while (isDigit(peek())) advance();
 
         // look for fractional part
-        if (peek() == '.' && isDigit(PeekNext())) {
+        if (peek() == '.' && isDigit(peekNext())) {
             // consume the "."
             advance();
 
-            while (isDigit(peek())) advance;
+            while (isDigit(peek())) advance();
         }
 
         addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
@@ -128,7 +165,7 @@ class Scanner {
             advance();
         }
 
-        if (isAtEnd) {
+        if (isAtEnd()) {
             Skon.error(line, "Unterminated string.");
             return;
         }
@@ -161,6 +198,18 @@ class Scanner {
     private char peekNext() {
         if (current + 1 >= source.length()) return '\0';
         return source.charAt(current + 1);
+    }
+
+    // identifier lexeme: check if char is in alphabet or '_'
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c < 'z') ||
+               (c >= 'A' && c <='Z') ||
+               c == '_';
+    }
+
+    //
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
     }
 
     // Return for digit lexeme
