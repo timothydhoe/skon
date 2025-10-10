@@ -93,7 +93,7 @@ class Scanner {
                 break;
 
             // Strings
-            case '""': string(); break;
+            case '"': string(); break;
 
             default:
                 if (isDigit(c)) {
