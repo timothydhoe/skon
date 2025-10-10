@@ -1,6 +1,7 @@
 # skon
 *A basic interpreter named after the delicious English treat: the scone.*
 
+>I try to keep this README up-to-date, but I know myself well enough to ensure you that I will miss things, skip over information or just outright forget to update this document. I don't ask for forgiveness, just understand that this document is, at the moment of writing, a livig document and might not hold all information.
 
 ## What is skon?
 
@@ -72,6 +73,11 @@ skon does not allow leading or trailing decimal points
 Negative numbers like ```-123``` is not a number literal, but an expression instead.
 
 *note: the digit lexemes are defined in the default case*
+
+#### Reserved words and identifiers
+
+#TODO:
+explain **Maximal munch**, **reserved word**
 
 ### Exit Values
 
