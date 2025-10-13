@@ -29,7 +29,7 @@ java skon.Skon
 ## Usage
 ```bash
 # REPL mode - interactive prompt
-> print "Hello, world!"
+>>> print "Hello, world!"
 
 # File mode
 skon examples/hello.skon
@@ -79,7 +79,25 @@ Negative numbers like ```-123``` is not a number literal, but an expression inst
 #TODO:
 explain **Maximal munch**, **reserved word**
 
-### Exit Values
+### Parser: Tree-walk Interpreter
+
+The scanner takes a series of raw source code and transforms them into a series of tokens.
+Here, in the parser, we'll transform them tino a more complex representation.
+
+Basis of the syntactic grammar.
+*TODO: add features, new syntax, after parser works.*
+
+```
+expression      -> literal | unary | binary | grouping ;
+literal         -> NUMBER | STRING | "true" | "false" | "nil" ;
+grouping        -> "(" expression ")" ;
+unary           -> ( "-" | "!") expression ;
+binary          -> expression operator expression ;
+operator        -> "==" | "!=" | "<" | "<=" | ">" | ">="
+                   | "+" | "-" | "*" | "/" ;
+```
+
+## Exit Values
 
 Following [UNIX "sysexit.h" conventions](https://manpages.ubuntu.com/manpages/noble/man3/sysexits.h.3head.html):
 
