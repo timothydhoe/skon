@@ -1,4 +1,4 @@
-package skon;
+package tool;
 /*
  * Command-line app that generates a file name "Expr. Java".
  * It allows to generate each class definition. 
@@ -24,8 +24,8 @@ public class GenerateAst {
 
         defineAst(outputDir, "Expr", Arrays.asList(
             "Binary   : Expr left, Token operator, Expr right",
-            "Grouping : Expr Expression",
-            "Literal  : Object Value",
+            "Grouping : Expr expression",
+            "Literal  : Object value",
             "Unary    : Token operator, Expr right"
         ));
     }
@@ -33,16 +33,50 @@ public class GenerateAst {
     public static void defineAst(
         String outputDir, String baseName, List<String> types)
         throws IOException {
-            String path = outputDir + "/" + baseName + ".java";
-            PrintWriter writer = new PrintWriter(path, UTF-8);
 
-            writer.println("package skon;");
-            writer.println();
-            writer.println("import java.util.List");
-            writer.println();
-            writer.println("abstract class " + baseName + " {");
+        String path = outputDir + "/" + baseName + ".java";
+        PrintWriter writer = new PrintWriter(path, "UTF-8");
 
-            writer.println("}");
-            writer.close()
+        writer.println("package skon;");
+        writer.println();
+        writer.println("import java.util.List;");
+        writer.println();
+        writer.println("abstract class " + baseName + " {");
+
+        // AST classes
+        for (String type : types) {
+            String className = type.split(":")[0].trim();
+            String fields = type.split(":")[1].trim();
+            defineType(writer, baseName, className, fields);
         }
+
+        writer.println("}");
+        writer.close();
+    }
+
+    // Helper function to define each subclass
+    private static void defineType(PrintWriter writer, String baseName, String className, String fieldList) {
+        writer.println();
+        writer.println("    static class " + className + " extends " + baseName + " {");
+
+        // Constructor
+        writer.println("        " + className + "(" + fieldList + ") {");
+
+        // Store parameters
+        String[] fields = fieldList.split(", ");
+        for (String field : fields) {
+            String name = field.split(" ")[1];
+            writer.println("            this." + name + " = " + name + ";");
+        }
+
+        writer.println("        }");
+
+        // Fields
+        writer.println();
+        for (String field : fields) {
+            writer.println("        final " + field + ";");
+        }
+
+        writer.println("    }");
+    }
 }
