@@ -1,0 +1,48 @@
+package skon;
+/*
+ * Command-line app that generates a file name "Expr. Java".
+ * It allows to generate each class definition. 
+ * 
+ * Using a description of each tree type, name and fields,
+ * it prints out the Java code needed to define a class with
+ * that name and state.
+ */
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+
+public class GenerateAst {
+    public static void main(String[] args) throws IOException {
+        if (args.length != 1) {
+            System.err.println("Usage: generate_ast <output directory>");
+            System.exit(64);
+        }
+        String outputDir = args[0];
+
+        defineAst(outputDir, "Expr", Arrays.asList(
+            "Binary   : Expr left, Token operator, Expr right",
+            "Grouping : Expr Expression",
+            "Literal  : Object Value",
+            "Unary    : Token operator, Expr right"
+        ));
+    }
+
+    public static void defineAst(
+        String outputDir, String baseName, List<String> types)
+        throws IOException {
+            String path = outputDir + "/" + baseName + ".java";
+            PrintWriter writer = new PrintWriter(path, UTF-8);
+
+            writer.println("package skon;");
+            writer.println();
+            writer.println("import java.util.List");
+            writer.println();
+            writer.println("abstract class " + baseName + " {");
+
+            writer.println("}");
+            writer.close()
+        }
+}
