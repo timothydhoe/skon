@@ -54,7 +54,7 @@ public class GenerateAst {
         writer.close();
     }
 
-    // Helper function to define each subclass
+    // Function to define each subclass
     private static void defineType(PrintWriter writer, String baseName, String className, String fieldList) {
         writer.println();
         writer.println("    static class " + className + " extends " + baseName + " {");

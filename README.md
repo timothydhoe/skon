@@ -85,7 +85,7 @@ The scanner takes a series of raw source code and transforms them into a series 
 Here, in the parser, we'll transform them tino a more complex representation.
 
 Basis of the syntactic grammar.
-*TODO: add features, new syntax, after parser works.*
+*TODO: add features, new syntax --> after parser works.*
 
 ```
 expression      -> literal | unary | binary | grouping ;
